@@ -9,21 +9,12 @@ const Button = (props) => {
 }
 
 const MostVoted = (props) => {
-    let most = 0;
-    let mostInd = 0;
-
-    for (let i=0; i<props.votes.length; i++) {
-        if (props.votes[i] > most) {
-            most = props.votes[i];
-            mostInd = i;
-        }
-    }
 
     return (
         <div>
             <h1>Anecdote with most votes</h1>
-            <p>{anecdotes[mostInd]}</p>
-            <p>has {props.votes[mostInd]} votes</p>
+            <p>{anecdotes[props.votes.indexOf(Math.max(...props.votes))]}</p>
+            <p>has {props.votes[props.votes.indexOf(Math.max(...props.votes))]} votes</p>
         </div>
     )
 }
