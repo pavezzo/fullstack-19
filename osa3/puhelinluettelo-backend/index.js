@@ -34,12 +34,8 @@ let persons = [{
 ]
 
 app.delete('/api/persons/:id', (req, res) => {
-    if (persons.map(e => e.id).includes(parseInt(req.params.id))) {
-        persons.splice(persons.indexOf(persons.find(e => e.id == req.params.id)))
-        res.sendStatus(204)
-    } else {
-        res.sendStatus(404)
-    }
+    persons = persons.filter(e => e.id !== Number(req.params.id))
+    res.sendStatus(204)
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -74,7 +70,7 @@ app.post('/api/persons', (req, res) => {
 
     persons.push(newPerson)
 
-    res.sendStatus(204)
+    res.status(201).json(newPerson)
 })
 
 app.get('/api/persons', (req, res) => {
@@ -86,4 +82,7 @@ app.get('/info', (req, res) => {
     res.send(str)
 })
 
-app.listen('3000');
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log(`running on port ${PORT}`)
+});
