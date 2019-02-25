@@ -26,8 +26,10 @@ const App = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser)
       setUser(user)
+      console.log(user.token)
+      blogService.setToken(user.token)
     }
-  })
+  }, [])
 
   const handleLogin = async(event) => {
     event.preventDefault()
@@ -54,14 +56,15 @@ const App = () => {
     event.preventDefault()
 
     const newBlog = {
-      token: user.token,
       author: author,
       title: title,
       url: url
     }
 
-    const request = blogService.postNewBlog(newBlog)
-    setBlogs(blogs.concat(request))
+    await blogService.postNewBlog(newBlog, user.token)
+
+    const newBlogs = await blogService.getAll()
+    setBlogs(newBlogs)
   }
 
   return (
@@ -73,7 +76,7 @@ const App = () => {
         <h2>blogs</h2>
         <p>{user.name} logged in</p>
         <button onClick={handleLogout}>Log out</button>
-        <NewBlog handleNewBlog={handleNewBlog} title={title} author={author} url={url}/>
+        <NewBlog handleNewBlog={handleNewBlog} title={title} author={author} url={url} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}/>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
